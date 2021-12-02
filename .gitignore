@@ -1,5 +1,8 @@
 venv
 
+### Gitpod ###
+.vscode
+
 ### Linux ###
 *~
 

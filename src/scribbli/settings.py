@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
+import os
 
 from pathlib import Path
 
@@ -31,7 +32,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -41,6 +41,12 @@ INSTALLED_APPS = [
     'channels',
     'graphql_ws.django',
     'graphene_django',
+    'mptt',
+    'django_ses',
+
+    'scribbli',
+    'scribbli.universe',
+    'magiclink',
 ]
 
 MIDDLEWARE = [
@@ -106,6 +112,18 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+# Custom User model
+# https://docs.djangoproject.com/en/3.2/ref/settings/#auth-user-model
+AUTH_USER_MODEL = 'scribbli.User'
+
+
+# Custom authentication backend (magic link)
+# https://docs.djangoproject.com/en/3.2/ref/settings/#authentication-backends
+AUTHENTICATION_BACKENDS = [
+    'magiclink.backends.MagicLinkBackend',
+]
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
@@ -129,3 +147,14 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = 'django_ses.SESBackend'
+
+
+### AWS settings
+
+AWS_SES_ACCESS_KEY_ID = os.getenv("AWS_SES_ACCESS_KEY_ID")
+AWS_SES_SECRET_ACCESS_KEY = os.getenv("AWS_SES_SECRET_ACCESS_KEY")
+
+AWS_SES_REGION_NAME = 'us-east-2'
+AWS_SES_REGION_ENDPOINT = 'email.us-east-2.amazonaws.com'
