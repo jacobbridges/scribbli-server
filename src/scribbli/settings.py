@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-v9sh$=r2)4q$xm=#kf3q-kyfr-$rf20y+065@!gx5)p$)_9pj+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -44,9 +44,11 @@ INSTALLED_APPS = [
     'mptt',
     'django_ses',
 
-    'scribbli',
     'scribbli.universe',
+    'scribbli.md',
+    'scribbli',
     'magiclink',
+    'landing',
 ]
 
 MIDDLEWARE = [
@@ -129,6 +131,71 @@ AUTHENTICATION_BACKENDS = [
 
 LANGUAGE_CODE = 'en-us'
 
+
+# Logging configuration
+# https://docs.djangoproject.com/en/dev/howto/logging/#logging-how-to
+# Extended from https://docs.djangoproject.com/en/4.0/ref/logging/#default-logging-configuration
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'formatters': {
+        'django.server': {
+            '()': 'django.utils.log.ServerFormatter',
+            'format': '[{server_time}] {message}',
+            'style': '{',
+        },
+        'std': {
+            'format': '{levelname} [{asctime}] - {message}',
+            'style': '{',
+        },
+        'dev': {
+            'format': '{levelname} [{asctime}] {module}::{funcName}() L{lineno} - {message}',
+            'style': '{'
+        },
+    },
+    'handlers': {
+        'console': {
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'std',
+        },
+        'django.server': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'std',
+        },
+        'dev': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'filters': ['require_debug_true'],
+            'formatter': 'dev',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+        'django.server': {
+            'handlers': ['django.server'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'dev': {
+            'handlers': ['dev'],
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],
+        },
+    },
+}
+
+
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
@@ -149,6 +216,17 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_BACKEND = 'django_ses.SESBackend'
+
+
+# Graphene settings
+# https://docs.graphene-python.org/projects/django/en/latest/settings/
+GRAPHENE = {
+    'SCHEMA': 'scribbli.schema.schema',
+    'MIDDLEWARE': (
+        #'scribbli.middleware.dev.LoggingGrapheneMiddleware',
+        #'scribbli.middleware.AddUserToInfoGrapheneMiddleware',
+    )
+}
 
 
 ### AWS settings

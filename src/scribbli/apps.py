@@ -4,3 +4,6 @@ from django.apps import AppConfig
 class ScribbliConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'scribbli'
+
+    def ready(self):
+        import scribbli.signals

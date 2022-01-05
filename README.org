@@ -3,3 +3,61 @@
 * What is this?
 
 Scribbli server is the backend for scribb.li
+
+* Ephemeral Coding
+
+Restart emacs babel session
+
+#+begin_src emacs-lisp
+(when (get-buffer "*scribbli*") (kill-buffer "*scribbli*"))
+#+end_src
+
+#+RESULTS:
+
+#+begin_src emacs-lisp :dir ./src :session scribbli
+(setenv "LD_LIBRARY_PATH" "/usr/local/lib/")
+(venv-set-location "/home/ec2-user/dev/scribbli-server/")
+(venv-workon "venv")
+#+end_src
+
+#+RESULTS:
+
+
+#+begin_src python :session scribbli :results output :dir ./src
+import os
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'scribbli.settings')
+print(os.getcwd())
+import django
+django.setup()
+#+end_src
+
+#+RESULTS:
+: /home/ec2-user/dev/scribbli-server/src
+
+
+
+#+NAME: scratch
+#+begin_src python :session scribbli :results output :dir ./src
+from scribbli.universe.models import Universe
+Universe.objects.create(name="Alpha")
+print([(u.id, u.name_slug) for u in Universe.objects.all()])
+#+end_src
+
+#+RESULTS: scratch
+: [(UUID('883e9f4d-d160-4e74-b723-8654e7b547fd'), '0001_alpha')]
+
+#+NAME: dry_login
+#+BEGIN_SRC python :session scribbli :results output :dir ./src
+from urllib.parse import urlencode
+from magiclink.utils import (
+    generate_magic_link,
+    verify_magic_link,
+)
+
+ml = generate_magic_link('vash0the0stampede@gmail.com')
+qs = urlencode({'email': ml.email, 'token': ml.token})
+print(f'http://scribb.li/#/login-from-magic-link/?{qs}')
+#+END_SRC
+
+#+RESULTS: dry_login
+: http://scribb.li/#/login-from-magic-link/?email=vash0the0stampede%40gmail.com&token=ea2e1fb5e2afaa70fc0cc07939c166700228c0e97190

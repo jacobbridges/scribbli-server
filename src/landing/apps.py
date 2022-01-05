@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class UniverseConfig(AppConfig):
+class LandingConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'scribbli.universe'
+    name = 'landing'

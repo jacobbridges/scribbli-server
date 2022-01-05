@@ -5,10 +5,10 @@ from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.core.validators import EmailValidator
 
-from scribbli.models.mixins import AbstractBaseModel
+from scribbli.models.mixins import GeneralPurposeModelMixin
 
 
-class User(PermissionsMixin, AbstractBaseUser, AbstractBaseModel):
+class User(PermissionsMixin, AbstractBaseUser, GeneralPurposeModelMixin):
     """
     Table contains cognito-users & django-users.
 

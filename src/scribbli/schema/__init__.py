@@ -1,18 +1,19 @@
 import graphene
-from graphene_django import DjangoObjectType
 
-from scribbli.models import User
+import landing.schema as landing
+import scribbli.universe.schema as universe
+from scribbli.utils import get_app_context
 
-class UserType(DjangoObjectType):
-    class Meta:
-        model = User
-        fields = ("id", "email")
+from .other import AppContext
 
-class Query(graphene.ObjectType):
-    all_users = graphene.List(UserType)
 
-    def resolve_all_users(root, info):
-        # We can easily optimize query count in the resolve method
-        return User.objects.all()
+class Query(landing.Query, universe.Query, graphene.ObjectType):
 
-schema = graphene.Schema(query=Query)
+    app_context = graphene.Field(AppContext)
+    def resolve_app_context(root, info):
+        return get_app_context(info.context)
+
+class Mutations(universe.Mutations):
+    pass
+
+schema = graphene.Schema(query=Query, mutation=Mutations)

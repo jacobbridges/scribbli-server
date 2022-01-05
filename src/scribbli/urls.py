@@ -18,12 +18,20 @@ from django.urls import path
 from graphene_django.views import GraphQLView
 
 from scribbli.schema import schema
+from scribbli.views.auth import (
+    PrivateGraphQLView,
+    MagicLinkCreateView,
+    MagicLinkLoginView,
+    LogoutView,
+)
+from landing.views import PreSignUpApiView
 
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import AnonymousUser
 from django.http import HttpResponse
 from django.shortcuts import redirect
+from django.urls import include
 from django.views.decorators.csrf import csrf_exempt
 
 import logging
@@ -67,10 +75,22 @@ def test_home(request):
         return HttpResponse("Hello World!")
 
 
+def test_csrf(request):
+    from django.template import Template, RequestContext
+    t = Template("{% csrf_token %}")
+    c = RequestContext(request, {})
+    return HttpResponse(t.render(c))
+
+
 urlpatterns = [
     path("graphql", csrf_exempt(GraphQLView.as_view(graphiql=True, schema=schema))),
-    path("login/", test_create_magic_link),
-    path("verify_magic_link/", test_verify_magic_link),
-    path("logout/", test_logout),
+    #path("login/", test_create_magic_link),
+    #path("verify_magic_link/", test_verify_magic_link),
+    #path("logout/", test_logout),
     path("home/", test_home),
+    path("csrf/", test_csrf),
+    path("api/create-magic-link/", MagicLinkCreateView.as_view()),
+    path("api/verify-magic-link/", MagicLinkLoginView.as_view()),
+    path("api/logout", LogoutView.as_view()),
+    path("api/", include("landing.urls")),
 ]

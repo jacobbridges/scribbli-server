@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+export $(grep -v '^#' ../.env | tr -d ' ' | xargs)
+export LD_LIBRARY_PATH="/usr/local/lib/"
+
+if [ "$#" -ne 1 ]; then
+  echo "The folling commands are enabled:"
+  echo "  srv  - runserver"
+  echo "  mm   - makemigrations"
+  echo "  m    - migrate"
+  echo "  mmm  - makemigrations & migrate"
+  echo "  rmmm - wipe migrations and start over"
+  echo "  p    - pass everything after p to manage.py"
+fi
+
+if [ "$1" == "srv" ]; then
+  poetry run python manage.py runserver 127.0.0.1:8000
+fi
+
+if [ "$1" == "mm" ]; then
+  poetry run python manage.py makemigrations
+fi
+
+if [ "$1" == "m" ]; then
+  poetry run python manage.py migrate
+fi
+
+if [ "$1" == "mmm" ]; then
+  poetry run python manage.py makemigrations && poetry run python manage.py migrate
+fi
+
+if [ "$1" == "rmmm" ]; then
+  find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
+  find . -path "*/migrations/*.pyc"  -delete
+  rm db.sqlite3
+  poetry run python manage.py makemigrations
+  poetry run python manage.py migrate
+fi
+
+if [ "$1" == "p" ]; then
+  poetry run python manage.py "${@:2}"
+fi

@@ -15,6 +15,7 @@ pydash = "^5.0.2"
 django-mptt = "^0.13.2"
 boto3 = "^1.18.36"
 django-ses = "^2.2.1"
+django-filter = "^21.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
