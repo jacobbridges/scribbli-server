@@ -28,6 +28,8 @@ def process_slugs(sender, **kwargs):
         field_value = getattr(instance, field_name)
         if field_value:
             slugify_value = slugify(field_value)
+            if getattr(instance, slugify_field_name) == slugify_value:
+                continue
             count = klass.objects.filter(**{slugify_field_name: slugify_value}).count()
             slug_value = f"{count+1:0>4}_{slugify_value}"
             setattr(instance, slug_field_name, slug_value)

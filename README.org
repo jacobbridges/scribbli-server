@@ -13,6 +13,7 @@ Restart emacs babel session
 #+end_src
 
 #+RESULTS:
+: t
 
 #+begin_src emacs-lisp :dir ./src :session scribbli
 (setenv "LD_LIBRARY_PATH" "/usr/local/lib/")
@@ -38,13 +39,23 @@ django.setup()
 
 #+NAME: scratch
 #+begin_src python :session scribbli :results output :dir ./src
-from scribbli.universe.models import Universe
+from scribbli.universe.models import Region
+
+print(Region.objects.filter(level=0).count())
+#+end_src
+
+#+RESULTS: scratch
+: 2
+
+#+NAME: create_universe
+#+begin_src python :session scribbli :results output :dir ./src
+from scribbli.universe.models import Universe, Region
 Universe.objects.create(name="Alpha")
 print([(u.id, u.name_slug) for u in Universe.objects.all()])
 #+end_src
 
-#+RESULTS: scratch
-: [(UUID('883e9f4d-d160-4e74-b723-8654e7b547fd'), '0001_alpha')]
+#+RESULTS: create_universe
+
 
 #+NAME: dry_login
 #+BEGIN_SRC python :session scribbli :results output :dir ./src
@@ -60,4 +71,4 @@ print(f'http://scribb.li/#/login-from-magic-link/?{qs}')
 #+END_SRC
 
 #+RESULTS: dry_login
-: http://scribb.li/#/login-from-magic-link/?email=vash0the0stampede%40gmail.com&token=ea2e1fb5e2afaa70fc0cc07939c166700228c0e97190
+: http://scribb.li/#/login-from-magic-link/?email=vash0the0stampede%40gmail.com&token=ed11349570379cebc5193e0eb5e6878caaab9fe00b6c

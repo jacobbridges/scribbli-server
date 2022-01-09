@@ -42,7 +42,7 @@ def get_app_context(request):
         csrftoken=token,
         universe_id=universe_id,
         is_logged_in=is_logged_in,
-        userdata=request.user,
+        userdata=request.user if is_logged_in else None,
     )
 
 

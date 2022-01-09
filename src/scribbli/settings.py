@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'mptt',
     'django_ses',
 
+    'scribbli.story',
     'scribbli.universe',
     'scribbli.md',
     'scribbli',

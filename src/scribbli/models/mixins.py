@@ -1,6 +1,7 @@
 import uuid
 
 from django.conf import settings
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 
@@ -115,3 +116,11 @@ def slug_mixin_factory(field_name_to_be_slugged: str, max_len: int):
     )
 
     return SlugModelMixin
+
+
+class ContentTypeMixin:
+    """Make models aware of their content type."""
+
+    @property
+    def content_type(self):
+        return ContentType.objects.get_for_model(self.__class__)

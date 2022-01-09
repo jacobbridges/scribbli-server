@@ -1,1 +1,1 @@
-from .region import RegionForm
+from .region import RegionForm, RegionUpdateForm

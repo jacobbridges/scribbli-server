@@ -1,0 +1,5 @@
+* Tasks
+** TODO Create story.Story model and connect to GraphQl
+** TODO Create story.Post model and conenct to GraphQl
+** TODO Add authwall to most GraphQl queries
+* Archive
